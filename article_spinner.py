@@ -4,12 +4,12 @@ import numpy as np
 
 from bs4 import BeautifulSoup
 
-positive_reviews = BeautifulSoup(open('electronics/positive.review').read())
+positive_reviews = BeautifulSoup(open('electronics/positive.review').read(), "html.parser")
 positive_reviews = positive_reviews.findAll('review_text')
 trigrams = {}
 
 for each_review in positive_reviews:
-    string = review.text.lower()
+    string = each_review.text.lower()
     tokens = nltk.tokenize.word_tokenize(string)
 
     for each_index in range(len(tokens) - 2):
@@ -40,13 +40,12 @@ for k, words in trigrams.items():
         trigram_probabilities[k] = dictionary
 
 def random_sample(dictionary):
-    random = random.random()
     cumulative = 0
 
     for each_word, p in dictionary.items():
         cumulative += p
         
-        if random < cumulative:
+        if random.random() < cumulative:
             return each_word
 
 def test_spinner():
@@ -57,13 +56,13 @@ def test_spinner():
 
     for each_index in range(len(tokens) -2):
         if random.random() < 0.2:
-            k = (tokens[each_index], tokens[each_tokens +2])
+            k = (tokens[each_index], tokens[each_index +2])
 
             if k in trigram_probabilities:
                 each_word = random_sample(trigram_probabilities[k])
                 tokens[each_index + 1] = each_word
 
-    print(f"Generated: {' '.join(tokens).replace(' .', '.').replace(' ,', ',').replace('$ ', '$').replace(' !', '!')}")
+    print(f"Generated: \n{' '.join(tokens).replace(' .', '.').replace(' ,', ',').replace('$ ', '$').replace(' !', '!')}")
 
 if __name__ == "__main__":
     test_spinner()
